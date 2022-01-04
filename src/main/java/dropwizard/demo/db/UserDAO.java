@@ -1,4 +1,4 @@
-package dropwizard.demo.DAO;
+package dropwizard.demo.db;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -13,15 +13,16 @@ import java.util.List;
 
 import dropwizard.demo.entities.UserEntity;
 import dropwizard.demo.constants.QueryConstants;
-import dropwizard.demo.config.ApplicationConfiguration;
+import dropwizard.demo.configuration.ApplicationConfiguration;
+
 import static dropwizard.demo.constants.QueryConstants.*;
 
 public class UserDAO {
 
     HikariConfig hikariConfig = new HikariConfig();
-    QueryRunner runner;
-    ResultSetHandler<UserEntity> resultSetHandler = new BeanHandler<>(UserEntity.class);
-    ResultSetHandler<List<Object[]>> arrayHandler = new ArrayListHandler();
+    static QueryRunner runner;
+    static ResultSetHandler<UserEntity> resultSetHandler = new BeanHandler<>(UserEntity.class);
+    static ResultSetHandler<List<Object[]>> arrayHandler = new ArrayListHandler();
 
     public UserDAO(ApplicationConfiguration applicationConfiguration) {
         hikariConfig.setJdbcUrl(applicationConfiguration.getDBConfiguration().getDataBaseURL());
@@ -33,23 +34,23 @@ public class UserDAO {
         runner = new QueryRunner(hikariDataSource);
     }
 
-    public UserEntity findByID(String userId) throws SQLException {
+    public static UserEntity findByID(String userId) throws SQLException {
         return runner.query(GET_USER_BY_ID + userId, resultSetHandler);
     }
 
-    public List<List<Object[]>> getAll() throws SQLException {
+    public static List<List<Object[]>> getAll() throws SQLException {
         return runner.execute(GET_ALL_USERS, arrayHandler);
     }
 
-    public void deleteUser(String userId) throws SQLException {
+    public static void deleteUser(String userId) throws SQLException {
         runner.execute(DELETE_USER_BY_ID + userId, resultSetHandler);
     }
 
-    public void addUser(UserEntity user) throws SQLException {
+    public static void addUser(UserEntity user) throws SQLException {
         runner.insert(QueryConstants.createInsertQuery(user), resultSetHandler);
     }
 
-    public void updateUser(UserEntity user) throws SQLException {
+    public static void updateUser(UserEntity user) throws SQLException {
         runner.update(QueryConstants.createUpdateQuery(user));
     }
 }

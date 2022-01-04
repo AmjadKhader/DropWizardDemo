@@ -1,13 +1,13 @@
 package dropwizard.demo;
 
+import dropwizard.demo.db.UserDAO;
 import io.dropwizard.configuration.ResourceConfigurationSourceProvider;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.Application;
 
-import dropwizard.demo.config.ApplicationConfiguration;
-import dropwizard.demo.controller.UserController;
-import dropwizard.demo.DAO.UserDAO;
+import dropwizard.demo.configuration.ApplicationConfiguration;
+import dropwizard.demo.resource.UserResource;
 
 public class MainClass extends Application<ApplicationConfiguration> {
     public static void main(String[] args) throws Exception {
@@ -18,9 +18,8 @@ public class MainClass extends Application<ApplicationConfiguration> {
     public void run(ApplicationConfiguration applicationConfiguration, Environment environment) {
 
         // You must register the endpoints that you want to expose
-        UserDAO userDAO = new UserDAO(applicationConfiguration);
-        environment.jersey().register(userDAO);
-        environment.jersey().register(new UserController(userDAO));
+        new UserDAO(applicationConfiguration);
+        environment.jersey().register(new UserResource());
     }
 
     @Override

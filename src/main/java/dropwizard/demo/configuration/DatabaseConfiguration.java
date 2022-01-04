@@ -1,11 +1,11 @@
-package dropwizard.demo.resources;
+package dropwizard.demo.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
-public class DatabaseResource {
+public class DatabaseConfiguration {
 
     @NotEmpty
     @JsonProperty("url")
